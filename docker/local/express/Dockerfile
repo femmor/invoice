@@ -1,10 +1,10 @@
 # Dockerfile instructions
 
 # Built in instructions
-ARG NODE_VERSION=21-alpine3.18
+ARG NODE_VERSION=18.16.0
 
 # Node version - base image
-FROM node:${NODE_VERSION}
+FROM node:${NODE_VERSION}-alpine as base
 
 # Label instructions - adds metadata to the image
 LABEL name="mern-invoice"

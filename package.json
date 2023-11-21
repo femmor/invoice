@@ -31,6 +31,6 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.0.1",
     "winston": "^3.11.0",
-    "winston-daily-rotate": "^0.0.1"
+    "winston-daily-rotate-file": "^4.7.1"
   }
 }
