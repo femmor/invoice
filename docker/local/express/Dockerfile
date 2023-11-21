@@ -1,7 +1,7 @@
 # Dockerfile instructions
 
 # Built in instructions
-ARG NODE_VERSION=16-alpine3.12 
+ARG NODE_VERSION=21-alpine3.18
 
 # Node version - base image
 FROM node:${NODE_VERSION}
@@ -21,8 +21,8 @@ ARG APP_HOME=/app
 WORKDIR ${APP_HOME}
 
 # Run docker container as non-root user - add a user (invoice) to the invoice group
-RUN addgroup --system invoice \
-    && adduser --system ingroup invoice invoice
+RUN addgroup -S invoice \
+    && adduser -S invoice -G invoice
 
 # Copy the package json/lock file and install dependencies
 COPY package*.json ./

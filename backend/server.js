@@ -18,7 +18,9 @@ app.use(cookieParser());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.json({
+    Hi: "Welcome to the Invoice app",
+  });
 });
 
 const PORT = process.env.PORT || 5005;
