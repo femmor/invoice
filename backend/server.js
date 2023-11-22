@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 import connectDB from "./config/connectDB.js";
+import mongoSanitize from "express-mongo-sanitize";
 
 import { morganMiddleware, systemLogs } from "./utils/Logger.js";
 
@@ -18,6 +19,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(mongoSanitize());
 app.use(morganMiddleware);
 
 app.get("/", (req, res) => {
@@ -33,11 +35,15 @@ const startApp = async () => {
     await connectDB();
     app.listen(PORT, () => {
       systemLogs.info(
-        `Server: Running in ${process.env.NODE_ENV} mode on port ${PORT}`
+        chalk.green.bold(
+          `Server: Running in ${process.env.NODE_ENV} mode on port ${PORT}`
+        )
       );
     });
   } catch (error) {
-    systemLogs.error(`Something went wrong when starting the server: ${error}`);
+    systemLogs.error(
+      chalk.red(`Something went wrong when starting the server: ${error}`)
+    );
   }
 };
 
