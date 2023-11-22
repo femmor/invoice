@@ -1,10 +1,7 @@
 import bcrypt from "bcryptjs";
-import dotenv from "dotenv";
 import { Schema, model } from "mongoose";
 import validator from "validator";
 import { USER } from "../constants";
-
-dotenv.config();
 
 const userSchema = new Schema(
   {
