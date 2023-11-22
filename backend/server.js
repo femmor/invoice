@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
+import connectDB from "./config/connectDB.js";
 
 import { morganMiddleware, systemLogs } from "./utils/Logger.js";
 
@@ -27,16 +28,17 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5005;
 
-app.listen(PORT, () => {
-  console.log(
-    [`Server: `] +
-      chalk.green.bold(
-        `Running in ${chalk.yellow(
-          process.env.NODE_ENV
-        )} mode on port ${chalk.yellow.bold(PORT)}`
-      )
-  );
-  systemLogs.info(
-    `Server: Running in ${process.env.NODE_ENV} mode on port ${PORT}`
-  );
-});
+const startApp = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      systemLogs.info(
+        `Server: Running in ${process.env.NODE_ENV} mode on port ${PORT}`
+      );
+    });
+  } catch (error) {
+    systemLogs.error(`Something went wrong when starting the server: ${error}`);
+  }
+};
+
+startApp();
