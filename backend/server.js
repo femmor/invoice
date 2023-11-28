@@ -8,6 +8,7 @@ import connectDB from "./config/connectDB.js";
 import mongoSanitize from "express-mongo-sanitize";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import { morganMiddleware, systemLogs } from "./utils/Logger.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -21,14 +22,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(mongoSanitize());
 app.use(morganMiddleware);
-app.use(notFound);
-app.use(errorHandler);
 
+// Test route
 app.get("/", (req, res) => {
   res.json({
-    Hi: "Welcome to the Invoice app",
+    message: "Welcome to our API!",
   });
 });
+
+// Auth routes
+app.use("/api/v1/auth", authRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5005;
 

@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import { Schema, model } from "mongoose";
 import validator from "validator";
-import { USER } from "../constants";
+import { USER } from "../constants/index.js";
 
 const userSchema = new Schema(
   {
@@ -53,10 +53,6 @@ const userSchema = new Schema(
     },
     passwordConfirm: {
       type: String,
-      validate: {
-        validator: (value) => value === this.password,
-        message: "Passwords do not match",
-      },
     },
     isEmailVerified: {
       type: Boolean,
@@ -114,7 +110,7 @@ const userSchema = new Schema(
 
 // Check if the user roles array is empty, push USER if empty before saving
 userSchema.pre("save", async function (next) {
-  if (this.roles.length === 0) {
+  if (this.roles?.length === 0) {
     this.roles.push(USER);
     next();
   }
@@ -122,14 +118,26 @@ userSchema.pre("save", async function (next) {
 
 // Encrypt password before saving
 userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    return next();
-  }
+  try {
+    // Only hash the password if it has been modified (or is new)
+    if (!this.isModified("password")) {
+      return next();
+    }
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  this.passwordConfirm = undefined;
-  next();
+    // Generate a salt and hash the password
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+
+    // Optionally, delete the passwordConfirm field if it exists
+    if (this.passwordConfirm) {
+      this.passwordConfirm = undefined;
+    }
+
+    // Continue with saving the user
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 // Update passwordChangedAt field
