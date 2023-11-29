@@ -1,7 +1,10 @@
 import asyncHandler from "express-async-handler";
 import User from "../../models/userModel.js";
+import VerifyResetToken from "../../models/verifyResetTokenModel.js";
+import sendEmail from "../../utils/sendEmail.js";
 
 const domainUrl = process.env.DOMAIN;
+const { randomBytes } = await import("crypto");
 
 // @title Register user
 // @route POST api/v1/auth/register
