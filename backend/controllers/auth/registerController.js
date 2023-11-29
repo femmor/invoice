@@ -1,7 +1,5 @@
 import asyncHandler from "express-async-handler";
 import User from "../../models/userModel.js";
-import jwt from "jsonwebtoken";
-import { systemLogs } from "../../utils/Logger.js";
 
 const domainUrl = process.env.DOMAIN;
 
